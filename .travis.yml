@@ -6,13 +6,11 @@ jdk:
 
 sudo: false
 
-os:
-  - windows
 branches:
   only:
   - master
 notifications:
   email:
   - sharomov.v@gmail.com
-      on_success: always
-    on_failure: never
+  on_success: always
+  on_failure: never
