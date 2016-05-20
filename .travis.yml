@@ -1,0 +1,9 @@
+language: java
+mvn test
+
+branches:
+  only:
+  - master
+notifications:
+  email:
+  - sharomov.v@gmail.com
