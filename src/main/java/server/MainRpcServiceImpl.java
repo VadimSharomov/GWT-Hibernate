@@ -25,6 +25,7 @@ import static org.mockito.Mockito.when;
 
 /**
  * Created by Vadim on 16.05.2016.
+ *
  */
 public class MainRpcServiceImpl extends RemoteServiceServlet implements MainRpcService {
 
@@ -65,7 +66,7 @@ public class MainRpcServiceImpl extends RemoteServiceServlet implements MainRpcS
         return null;
     }
 
-    byte[] hashPassword(final char[] password, final byte[] salt, final int iterations, final int keyLength) {
+    public byte[] hashPassword(final char[] password, final byte[] salt, final int iterations, final int keyLength) {
         try {
             SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA512");
             PBEKeySpec spec = new PBEKeySpec(password, salt, iterations, keyLength);
