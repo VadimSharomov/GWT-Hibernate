@@ -17,10 +17,7 @@ public interface UserMessages extends Messages{
     @Messages.DefaultMessage("Password")
     String password();
 
-    @Messages.DefaultMessage("Password failed")
-    String passwordFailed();
-
-    @Messages.DefaultMessage("Login failed")
+    @Messages.DefaultMessage("Login or password failed")
     String loginFailed();
 
     @Messages.DefaultMessage("Submit")

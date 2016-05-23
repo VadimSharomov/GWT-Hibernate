@@ -47,6 +47,22 @@
             <artifactId>mysql-connector-java</artifactId>
             <version>6.0.2</version>
         </dependency>
+        <!-- http://mvnrepository.com/artifact/com.googlecode.gwt-crypto/gwt-crypto -->
+        <dependency>
+            <groupId>com.googlecode.gwt-crypto</groupId>
+            <artifactId>gwt-crypto</artifactId>
+            <version>2.3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>1.10.19</version>
+        </dependency>
     </dependencies>
 
     <build>

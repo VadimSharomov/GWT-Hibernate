@@ -10,7 +10,7 @@ import com.google.gwt.resources.client.CssResource;
  */
 public interface LoginResources extends ClientBundle  {
 
-    public interface MyCss extends CssResource {
+    interface MyCss extends CssResource {
         String blackText();
 
         String blackTextCenter();
@@ -24,6 +24,16 @@ public interface LoginResources extends ClientBundle  {
         String background();
 
         String footer();
+
+        String logoText();
+
+        String logoPanel();
+
+        String verticalLogoPanel();
+
+        String horizontalCentralPanel();
+
+        String verticalCentralPanel();
     }
 
     @Source("Login.css")

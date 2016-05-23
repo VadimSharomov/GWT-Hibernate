@@ -50,28 +50,20 @@ public class LoginViewImpl extends Composite implements LoginView {
     @UiField
     Image imageLogo;
     @UiField
-    Image imageFooter;
-    @UiField
     Label labelFooter;
+    @UiField
+    Label logoLabel;
 
     private Boolean tooShort = false;
 
     @UiHandler("buttonSubmit")
     void doClickSubmit(ClickEvent event) {
-        if (tooShort) {
-//            completionLabel2.setText("Login or Password is too short!");
-        }
+
     }
 
     @UiHandler("loginBox")
     void handleLoginChange(ValueChangeEvent<String> event) {
-        if (event.getValue().length() < 3) {
-//            completionLabel2.setText("Login too short (Size must be > 3)");
-            tooShort = true;
-        } else {
-            tooShort = false;
-            completionLabel2.setText("");
-        }
+
     }
 
     @UiHandler("loginBox")
@@ -88,13 +80,7 @@ public class LoginViewImpl extends Composite implements LoginView {
 
     @UiHandler("passwordBox")
     void handlePasswordChange(ValueChangeEvent<String> event) {
-        if (event.getValue().length() < 3) {
-            tooShort = true;
-//            completionLabel2.setText("Password too short (Size must be > 3)");
-        } else {
-            tooShort = false;
-            completionLabel2.setText("");
-        }
+
     }
 
     @Override
@@ -155,5 +141,10 @@ public class LoginViewImpl extends Composite implements LoginView {
     @Override
     public Anchor getLogoutLink() {
         return logoutLink;
+    }
+
+    @Override
+    public Label getLogoLabel() {
+        return logoLabel;
     }
 }

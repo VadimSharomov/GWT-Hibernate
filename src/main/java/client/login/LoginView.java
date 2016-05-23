@@ -31,4 +31,6 @@ public interface LoginView {
     Label getPasswordLabel();
 
     Anchor getLogoutLink();
+
+    Label getLogoLabel();
 }

@@ -4,36 +4,32 @@
     <ui:with type="client.login.LoginResources" field="res"/>
 
     <gwt:HTMLPanel>
-        <div align="left">
+        <gwt:HorizontalPanel styleName="{res.style.logoPanel}">
             <gwt:Image ui:field="imageLogo"/>
-        </div>
-        <div align="center">
-            <gwt:VerticalPanel styleName="{res.style.blackText}">
-                <gwt:Label ui:field="loginLabel" text="Login" styleName="{res.style.blackText}"/>
-                <gwt:TextBox ui:field="loginBox" styleName="{res.style.box}"/>
-
-                <gwt:Label ui:field="passwordLabel" text="Password" styleName="{res.style.blackText}"/>
-                <gwt:PasswordTextBox ui:field="passwordBox"
-                                     styleName="{res.style.box}"/>
-
-                <gwt:HorizontalPanel verticalAlignment="middle">
-                    <gwt:Button ui:field="buttonSubmit" text="Submit"
-                                styleName="{res.style.loginButton}"/>
-                </gwt:HorizontalPanel>
-
-                <gwt:Label ui:field="completionLabel1"
-                           styleName="{res.style.blackText}"/>
-
-                <gwt:Label ui:field="completionLabel2"
-                           styleName="{res.style.redText}"/>
-                <gwt:Anchor ui:field="logoutLink" styleName="{res.style.blackText}"/>
-
+            <gwt:VerticalPanel styleName="{res.style.verticalLogoPanel}">
+                <gwt:Label ui:field="logoLabel" styleName="{res.style.logoText}"/>
             </gwt:VerticalPanel>
+        </gwt:HorizontalPanel>
 
+        <gwt:HorizontalPanel styleName="{res.style.horizontalCentralPanel}">
+        </gwt:HorizontalPanel>
 
-            <gwt:Label ui:field="labelFooter" styleName="{res.style.footer}"/>
-            <gwt:Image ui:field="imageFooter" />
-        </div>
+        <gwt:VerticalPanel styleName="{res.style.verticalCentralPanel}">
+            <gwt:Label ui:field="loginLabel" text="Login" styleName="{res.style.blackText}"/>
+            <gwt:TextBox ui:field="loginBox" styleName="{res.style.box}"/>
+
+            <gwt:Label ui:field="passwordLabel" text="Password" styleName="{res.style.blackText}"/>
+            <gwt:PasswordTextBox ui:field="passwordBox" styleName="{res.style.box}"/>
+
+            <gwt:Button ui:field="buttonSubmit" text="Submit" styleName="{res.style.loginButton}"/>
+
+            <gwt:Label ui:field="completionLabel1" styleName="{res.style.blackText}"/>
+            <gwt:Label ui:field="completionLabel2" styleName="{res.style.redText}"/>
+            <gwt:Anchor ui:field="logoutLink" styleName="{res.style.blackText}"/>
+        </gwt:VerticalPanel>
+
+        <gwt:Label ui:field="labelFooter" styleName="{res.style.footer}"/>
+        <gwt:Image ui:field="imageFooter"/>
 
     </gwt:HTMLPanel>
 

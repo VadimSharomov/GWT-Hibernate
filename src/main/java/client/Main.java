@@ -39,7 +39,8 @@ public class Main implements EntryPoint {
         loginView.getButtonSubmit().setText(messages.submit());
 
         loginView.getImageLogo().setUrl("imageLogo.jpg");
-        loginView.getLabelFooter().setText("Copyright 2016");
+        loginView.getLogoLabel().setText("GWT Productivity for developers, performance for users");
+        loginView.getLabelFooter().setText("© 2016 Company Name");
         loginView.getLogoutLink().setVisible(false);
 
         loginView.getLoginBox().addKeyDownHandler(new KeyDownHandler() {
@@ -72,7 +73,7 @@ public class Main implements EntryPoint {
 
                     @Override
                     public void onSuccess(User user) {
-                        if ((user != null) && login.equals(user.getLogin()) && password.equals(user.getPassword())) {
+                        if (user != null) {
                             String greeting = getGreetingOfDay();
 
                             loginView.getLoginLabel().setVisible(false);
@@ -93,11 +94,7 @@ public class Main implements EntryPoint {
 
                             logger.log(Level.SEVERE, "Login success");
                         } else {
-                            if ((user != null) && (login.equals(user.getLogin()))) {
-                                loginView.getCompletionLabel2().setText(messages.passwordFailed());
-                            } else {
-                                loginView.getCompletionLabel2().setText(messages.loginFailed());
-                            }
+                            loginView.getCompletionLabel2().setText(messages.loginFailed());
                             logger.log(Level.SEVERE, "Login failed");
                         }
                     }
