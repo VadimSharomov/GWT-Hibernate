@@ -3,13 +3,9 @@ package shared;
 import javax.persistence.*;
 import java.io.Serializable;
 
-/**
- * Created by Vadim on 16.05.2016.
- *
- */
 @Entity
 @Table(name = "users", schema = "gwthiber")
-public class User implements Serializable{
+public class User implements Serializable {
     private long id;
     private String login;
     private byte[] password;
@@ -96,6 +92,6 @@ public class User implements Serializable{
 
     @Override
     public String toString() {
-        return "User: id=" + id +", login=" + login + ", name=" + name;
+        return " User: id=" + id + ", login=" + login + ", name=" + name + "\n";
     }
 }

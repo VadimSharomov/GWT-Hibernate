@@ -4,14 +4,17 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
 
+    <welcome-file-list>
+        <welcome-file>Main.html</welcome-file>
+    </welcome-file-list>
+
     <servlet>
         <servlet-name>Main MainRpcService</servlet-name>
         <servlet-class>server.MainRpcServiceImpl</servlet-class>
     </servlet>
-
     <servlet-mapping>
         <servlet-name>Main MainRpcService</servlet-name>
-        <url-pattern>/gwthiber/gwtPersistService</url-pattern>
+        <url-pattern>/gwthiber/MainRpcService</url-pattern>
     </servlet-mapping>
 
     <servlet>
@@ -22,4 +25,5 @@
         <servlet-name>remoteLogging</servlet-name>
         <url-pattern>/gwthiber/remote_logging</url-pattern>
     </servlet-mapping>
+
 </web-app>

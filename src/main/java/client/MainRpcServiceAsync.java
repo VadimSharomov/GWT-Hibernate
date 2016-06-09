@@ -12,4 +12,6 @@ public interface MainRpcServiceAsync {
     void saveUser(User user, AsyncCallback<User> async);
 
     void loginUser(String login, String password, AsyncCallback<User> async);
+
+    void getGreeting(String greeting, AsyncCallback<String> async);
 }

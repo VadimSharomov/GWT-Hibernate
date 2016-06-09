@@ -2,8 +2,6 @@ package client.login;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -54,8 +52,6 @@ public class LoginViewImpl extends Composite implements LoginView {
     @UiField
     Label logoLabel;
 
-    private Boolean tooShort = false;
-
     @UiHandler("buttonSubmit")
     void doClickSubmit(ClickEvent event) {
 
@@ -66,31 +62,9 @@ public class LoginViewImpl extends Composite implements LoginView {
 
     }
 
-    @UiHandler("loginBox")
-    void handleLoginKeyboardKey(KeyDownEvent event) {
-        if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
-        }
-    }
-
-    @UiHandler("passwordBox")
-    void handlePasswordKeyboardKey(KeyDownEvent event) {
-        if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
-        }
-    }
-
     @UiHandler("passwordBox")
     void handlePasswordChange(ValueChangeEvent<String> event) {
 
-    }
-
-    @Override
-    public HasText getUserInputBox() {
-        return loginBox;
-    }
-
-    @Override
-    public HasText getPassInputBox() {
-        return passwordBox;
     }
 
     @Override

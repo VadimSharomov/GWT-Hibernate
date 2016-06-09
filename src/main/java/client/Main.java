@@ -5,8 +5,6 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.KeyDownEvent;
-import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.TimeZone;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -17,22 +15,20 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * Created by Vadim on 16.05.2016.
- *
- */
+
 public class Main implements EntryPoint {
     private static Logger logger = Logger.getLogger("MyLogger");
     private UserMessages messages = GWT.create(UserMessages.class);
     private static String currentLocal = com.google.gwt.i18n.client.LocaleInfo.getCurrentLocale().getLocaleName();
+    private MainRpcServiceAsync rpcService = GWT.create(MainRpcService.class);
 
+    /**
+     * Entry point method.
+     */
     public void onModuleLoad() {
         final LoginViewImpl loginView = new LoginViewImpl();
-        final MainRpcServiceAsync rpcService = GWT.create(MainRpcService.class);
-
         logger.log(Level.SEVERE, "onModuleLoad() - success");
         logger.log(Level.SEVERE, "Current locale: " + currentLocal);
-
 
         loginView.getLoginLabel().setText(messages.login());
         loginView.getPasswordLabel().setText(messages.password());
@@ -43,31 +39,34 @@ public class Main implements EntryPoint {
         loginView.getLabelFooter().setText("© 2016 Company Name");
         loginView.getLogoutLink().setVisible(false);
 
-        loginView.getLoginBox().addKeyDownHandler(new KeyDownHandler() {
-            @Override
-            public void onKeyDown(KeyDownEvent event) {
-//                logger.log(Level.SEVERE, "onKeyDown(KeyDownEvent event)");
-            }
-        });
+//        loginView.getLoginBox().addKeyDownHandler(new KeyDownHandler() {
+//            @Override
+//            public void onKeyDown(KeyDownEvent event) {
 
+//            }
+//        });
+
+        /**
+         * Add click handler to button Submit.
+         */
         loginView.getButtonSubmit().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                actionLoginUser();
-                RootPanel.get().add(loginView);
+                LogginUser();
             }
 
-            private void actionLoginUser() {
-                loginView.getCompletionLabel1().setText("");
-                loginView.getCompletionLabel2().setText("");
-
+            private void LogginUser() {
                 final String login = loginView.getLoginBox().getValue();
                 final String password = loginView.getPasswordBox().getValue();
 
+                loginView.getCompletionLabel1().setText("");
+                loginView.getCompletionLabel2().setText("");
+
+                //send login and password to server
                 rpcService.loginUser(login, password, new AsyncCallback<User>() {
                     @Override
                     public void onFailure(Throwable caught) {
-                        loginView.getCompletionLabel2().setText("Fail loginUser()");
+                        loginView.getCompletionLabel2().setText("rpcService.loginUser() - onFailure ");
                         logger.log(Level.SEVERE, "Fail: onFailure(Throwable caught) in rpcService.loginUser(login, password, new AsyncCallback<User>()");
                     }
 
@@ -105,7 +104,9 @@ public class Main implements EntryPoint {
         RootPanel.get().add(loginView);
     }
 
-
+    /**
+     * Generation greetings depending on the time of day
+     */
     private String getGreetingOfDay() {
         Date date = new Date();
         DateTimeFormat dtf = DateTimeFormat.getFormat("HH:mm");
@@ -123,6 +124,9 @@ public class Main implements EntryPoint {
         } else return messages.goodDay();
     }
 
+    /**
+     * Test method
+     */
     public String getGreeting(String name) {
         return "Hello " + name + "!";
     }

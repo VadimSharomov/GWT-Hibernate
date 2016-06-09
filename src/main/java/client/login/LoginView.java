@@ -8,10 +8,6 @@ import com.google.gwt.user.client.ui.*;
  */
 public interface LoginView {
 
-    HasText getUserInputBox();
-
-    HasText getPassInputBox();
-
     Label getCompletionLabel1();
 
     Label getCompletionLabel2();
