@@ -4,10 +4,11 @@ import client.Main;
 import client.MainRpcService;
 import client.MainRpcServiceAsync;
 import client.login.LoginViewImpl;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.rpc.ServiceDefTarget;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.junit.client.GWTTestCase;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.rpc.ServiceDefTarget;
+
 
 
 public class TestGWTTestCase extends GWTTestCase {

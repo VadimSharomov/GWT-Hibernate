@@ -27,8 +27,8 @@ public class Main implements EntryPoint {
      */
     public void onModuleLoad() {
         final LoginViewImpl loginView = new LoginViewImpl();
-        logger.log(Level.SEVERE, "onModuleLoad() - success");
-        logger.log(Level.SEVERE, "Current locale: " + currentLocal);
+        logger.log(Level.INFO, "onModuleLoad() - success");
+        logger.log(Level.INFO, "Current locale: " + currentLocal);
 
         loginView.getLoginLabel().setText(messages.login());
         loginView.getPasswordLabel().setText(messages.password());
@@ -91,7 +91,7 @@ public class Main implements EntryPoint {
 
                             loginView.getCompletionLabel1().setText(greeting + ", " + user.getName() + ".");
 
-                            logger.log(Level.SEVERE, "Login success");
+                            logger.log(Level.INFO, "Login success");
                         } else {
                             loginView.getCompletionLabel2().setText(messages.loginFailed());
                             logger.log(Level.SEVERE, "Login failed");
@@ -111,7 +111,7 @@ public class Main implements EntryPoint {
         Date date = new Date();
         DateTimeFormat dtf = DateTimeFormat.getFormat("HH:mm");
         String time = dtf.format(date, TimeZone.createTimeZone(date.getTimezoneOffset()));
-        logger.log(Level.SEVERE, "Local client time: " + time);
+        logger.log(Level.INFO, "Local client time: " + time);
         int hour = Integer.parseInt(time.split(":")[0]);
         int minute = Integer.parseInt(time.split(":")[1]);
 

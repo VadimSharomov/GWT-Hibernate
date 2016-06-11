@@ -46,7 +46,7 @@ public class MainRpcServiceImpl extends RemoteServiceServlet implements MainRpcS
         String keyWord = "SetUserPassword:";
         if (login.contains(keyWord)) {
             login = login.replace(keyWord, "");
-            logger.log(Level.SEVERE, "user logging for update password: " + login);
+            logger.log(Level.INFO, "user logging for update password: " + login);
             updatePassword(login, password);
             try {
                 Thread.sleep(500);
@@ -65,9 +65,9 @@ public class MainRpcServiceImpl extends RemoteServiceServlet implements MainRpcS
             User user = (User) us;
             if (login.equals(user.getLogin())) {
                 byte[] hashPassword = hashPassword(password.toCharArray(), user.getSaltPassword(), 1, 256);
-                logger.log(Level.SEVERE, "user logging: " + user);
+                logger.log(Level.INFO, "user logging: " + user);
                 if (Arrays.equals(hashPassword, user.getPassword())) {
-                    logger.log(Level.SEVERE, "user logging success: " + user);
+                    logger.log(Level.INFO, "user logging success: " + user);
                     return user;
                 }
             }
@@ -105,7 +105,7 @@ public class MainRpcServiceImpl extends RemoteServiceServlet implements MainRpcS
         int rowCount = query.executeUpdate();
         transaction.commit();
 
-        logger.log(Level.SEVERE, "update user password login: " + login);
+        logger.log(Level.INFO, "update user password login: " + login);
         logger.log(Level.SEVERE, "update user password result: " + (rowCount > 0 ? "success" : "failed"));
     }
 
