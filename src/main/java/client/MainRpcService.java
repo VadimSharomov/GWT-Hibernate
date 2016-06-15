@@ -11,7 +11,7 @@ public interface MainRpcService extends RemoteService {
 
     List<User> getAllUsers();
 
-    User saveUser(User user);
+    void saveUser(User user);
 
     User loginUser(String login, String password);
 

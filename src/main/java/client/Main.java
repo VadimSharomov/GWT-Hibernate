@@ -31,7 +31,6 @@ public class Main implements EntryPoint {
         logging("Current locale: " + currentLocal);
         renderingLoginPage(loginView);
 
-        //Add click handler to button Submit.
         loginView.getButtonSubmit().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
@@ -86,7 +85,6 @@ public class Main implements EntryPoint {
         loginView.getLabelFooter().setText("© 2016 Company Name");
     }
 
-    //to get ru locale add to the end URL "?locale=ru"
     private void renderingHomePage(User user, LoginViewImpl loginView) {
         hideLoginFields(loginView);
 
@@ -110,9 +108,7 @@ public class Main implements EntryPoint {
         loginView.getButtonSubmit().setVisible(false);
     }
 
-    /**
-     * Generation greetings depending on the time of day
-     */
+    //Generation greetings depending on the time of day
     private String getGreetingDependingOnTimeOfDay() {
         Date date = new Date();
         DateTimeFormat dtf = DateTimeFormat.getFormat("HH:mm");
@@ -136,9 +132,7 @@ public class Main implements EntryPoint {
         } else return messages.goodDay();
     }
 
-    /**
-     * Method for testing
-     */
+    //Method for testing
     public String getGreeting(String name) {
         return "Hello " + name + "!";
     }

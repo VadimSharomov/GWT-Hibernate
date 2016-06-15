@@ -37,9 +37,8 @@ public class MainRpcServiceImpl extends RemoteServiceServlet implements MainRpcS
     }
 
     @Override
-    public User saveUser(User user) {
+    public void saveUser(User user) {
         session.save(user);
-        return null;
     }
 
     @Override
@@ -75,14 +74,14 @@ public class MainRpcServiceImpl extends RemoteServiceServlet implements MainRpcS
         }
     }
 
-    /**
-     * This method can create or update password.
-     * Password is creating with PBKDF2 and HMACSHA512 and salt.
-     * It is creating new salt when is updating or creating user password.
-     * Salt is creating using SecureRandom.
-     * New password and salt are storing in data base.
-     * For password and salt data base must have field with BLOB type.
-     */
+    /*
+     This method can create or update password.
+     Password is creating with PBKDF2 and HMACSHA512 and salt.
+     It is creating new salt when is updating or creating user password.
+     Salt is creating using SecureRandom.
+     New password and salt are storing in data base.
+     For password and salt data base must have field with BLOB type.
+    */
     private void updateUserPassword(String login, String password) {
         SecureRandom random = new SecureRandom();
         byte[] salt = new byte[32];
