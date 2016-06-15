@@ -12,17 +12,13 @@ public class User implements Serializable {
     private byte[] saltPassword;
     private String name;
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
     @Id
     @Column(name = "id", nullable = false)
     public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -68,6 +64,7 @@ public class User implements Serializable {
         this.saltPassword = saltPassword;
     }
 
+    @SuppressWarnings("RedundantIfStatement")
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

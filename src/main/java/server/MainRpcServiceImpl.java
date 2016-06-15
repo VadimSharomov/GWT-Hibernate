@@ -62,7 +62,7 @@ public class MainRpcServiceImpl extends RemoteServiceServlet implements MainRpcS
                 }
             }
         }
-        return null;
+        return new User();
     }
 
     //For administration purposes. Update the password for an existing user
@@ -119,6 +119,7 @@ public class MainRpcServiceImpl extends RemoteServiceServlet implements MainRpcS
             SecretKey key = skf.generateSecret(spec);
             return key.getEncoded();
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+            logging("getHashPassword: failed");
             throw new RuntimeException(e);
         }
     }

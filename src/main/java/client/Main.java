@@ -48,7 +48,7 @@ public class Main implements EntryPoint {
 
                     @Override
                     public void onSuccess(User user) {
-                        if (user != null) {
+                        if (user.getLogin() != null) {
                             renderingHomePage(user, loginView);
                             logging("Login success");
                         } else {
