@@ -3,6 +3,7 @@ package server;
 import client.MainRpcService;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.googlecode.gwt.crypto.util.SecureRandom;
+import org.apache.log4j.varia.NullAppender;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -19,11 +20,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * Created by Vadim on 16.05.2016.
- *
- */
-
 public class MainRpcServiceImpl extends RemoteServiceServlet implements MainRpcService {
     private Session session;
     private Logger logger = Logger.getLogger("MyLogger");
@@ -31,6 +27,7 @@ public class MainRpcServiceImpl extends RemoteServiceServlet implements MainRpcS
     public MainRpcServiceImpl() {
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         session = sessionFactory.openSession();
+        org.apache.log4j.BasicConfigurator.configure(new NullAppender());
     }
 
     @Override
@@ -40,21 +37,14 @@ public class MainRpcServiceImpl extends RemoteServiceServlet implements MainRpcS
     }
 
     @Override
-    public User loginUser(String login, String password) {
+    public User saveUser(User user) {
+        session.save(user);
+        return null;
+    }
 
-//      for administration purposes. Update the password for an existing user
-        String keyWord = "SetUserPassword:";
-        if (login.contains(keyWord)) {
-            login = login.replace(keyWord, "");
-            logger.log(Level.INFO, "user logging for update password: " + login);
-            updatePassword(login, password);
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                logger.log(Level.SEVERE, "password change failed: " + login);
-                e.printStackTrace();
-            }
-        }
+    @Override
+    public User loginUser(String login, String password) {
+        updatePasswordIfCommandUpdate(login, password);
 
         String hql = "FROM User WHERE login = :login";
         Query query = session.createQuery(hql);
@@ -64,10 +54,10 @@ public class MainRpcServiceImpl extends RemoteServiceServlet implements MainRpcS
         for (Object us : usersList) {
             User user = (User) us;
             if (login.equals(user.getLogin())) {
-                byte[] hashPassword = hashPassword(password.toCharArray(), user.getSaltPassword(), 1, 256);
-                logger.log(Level.INFO, "user logging: " + user);
+                byte[] hashPassword = getHashPassword(password.toCharArray(), user.getSaltPassword());
+                logging("user logging: " + user);
                 if (Arrays.equals(hashPassword, user.getPassword())) {
-                    logger.log(Level.INFO, "user logging success: " + user);
+                    logging("user logging success: " + user);
                     return user;
                 }
             }
@@ -75,27 +65,30 @@ public class MainRpcServiceImpl extends RemoteServiceServlet implements MainRpcS
         return null;
     }
 
-    /**
-     * Test method
-     */
-    @Override
-    public String getGreeting(String greeting) {
-        return greeting + ", World!";
+    //For administration purposes. Update the password for an existing user
+    private void updatePasswordIfCommandUpdate(String login, String password) {
+        String commandUpdatePasw = "SetUserPassword:";
+        if (login.contains(commandUpdatePasw)) {
+            login = login.replace(commandUpdatePasw, "");
+            logging("user logging for update password: " + login);
+            updateUserPassword(login, password);
+        }
     }
 
     /**
-    This method can create or update password.
-    Password is creating with PBKDF2 and HMACSHA512 and salt.
-    It is creating new salt when is updating or creating user password.
-    Salt is creating using SecureRandom.
-    New password and salt are storing in data base.
-    For password and salt data base must have field with BLOB type.
+     * This method can create or update password.
+     * Password is creating with PBKDF2 and HMACSHA512 and salt.
+     * It is creating new salt when is updating or creating user password.
+     * Salt is creating using SecureRandom.
+     * New password and salt are storing in data base.
+     * For password and salt data base must have field with BLOB type.
      */
-    private void updatePassword(String login, String password) {
+    private void updateUserPassword(String login, String password) {
         SecureRandom random = new SecureRandom();
         byte[] salt = new byte[32];
+
         random.nextBytes(salt);
-        byte[] hashPassword = hashPassword(password.toCharArray(), salt, 1, 256);
+        byte[] hashPassword = getHashPassword(password.toCharArray(), salt);
 
         Transaction transaction = session.beginTransaction();
         Query query = session.createQuery("update User set password = :password, saltPassword =:salt where login = :login");
@@ -105,14 +98,21 @@ public class MainRpcServiceImpl extends RemoteServiceServlet implements MainRpcS
         int rowCount = query.executeUpdate();
         transaction.commit();
 
-        logger.log(Level.INFO, "update user password login: " + login);
-        logger.log(Level.SEVERE, "update user password result: " + (rowCount > 0 ? "success" : "failed"));
+        logging("update user password login: " + login);
+        if (rowCount > 0) {
+            logging("update user password result: success");
+        } else {
+            logging("update user password result: failed");
+        }
     }
 
     /**
-     Password is creating with PBKDF2 and HMACSHA512 and salt.
+     * Password is creating with PBKDF2 and HMACSHA512 and salt.
      */
-    public byte[] hashPassword(final char[] password, final byte[] salt, final int iterations, final int keyLength) {
+    public byte[] getHashPassword(final char[] password, final byte[] salt) {
+        int iterations = 1;
+        int keyLength = 256;
+
         try {
             SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA512");
             PBEKeySpec spec = new PBEKeySpec(password, salt, iterations, keyLength);
@@ -123,9 +123,15 @@ public class MainRpcServiceImpl extends RemoteServiceServlet implements MainRpcS
         }
     }
 
+    private void logging(String msg) {
+        logger.log(Level.SEVERE, msg);
+    }
+
+    /**
+     * Test method
+     */
     @Override
-    public User saveUser(User user) {
-        session.save(user);
-        return null;
+    public String getGreeting(String greeting) {
+        return greeting + ", World!";
     }
 }

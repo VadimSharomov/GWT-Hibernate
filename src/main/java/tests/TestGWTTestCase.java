@@ -23,7 +23,6 @@ public class TestGWTTestCase extends GWTTestCase {
         target.setServiceEntryPoint(GWT.getModuleBaseURL() + "MainRpcServiceImpl");
 
         delayTestFinish(10000);
-
         rpcService.getGreeting("Hello",
                 new AsyncCallback<String>() {
                     public void onFailure(Throwable caught) {
@@ -37,7 +36,6 @@ public class TestGWTTestCase extends GWTTestCase {
                 });
     }
 
-
     public void testGetGreeting() {
         Main testMain = new Main();
         String name = "World";
@@ -45,11 +43,11 @@ public class TestGWTTestCase extends GWTTestCase {
         assertEquals(expectedGreeting, testMain.getGreeting(name));
     }
 
-    public void testView() {
+    public void testLoginView() {
         String greeting = "Hello, World!";
         LoginViewImpl loginView = new LoginViewImpl();
-        loginView.getCompletionLabel1().setText(greeting);
-        assertEquals(greeting, loginView.getCompletionLabel1().getText());
+        loginView.getLabel1().setText(greeting);
+        assertEquals(greeting, loginView.getLabel1().getText());
     }
 }
 

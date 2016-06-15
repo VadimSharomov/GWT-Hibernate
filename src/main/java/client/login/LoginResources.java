@@ -4,10 +4,6 @@ package client.login;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 
-/**
- * Created by Vadim on 16.05.2016.
- *
- */
 public interface LoginResources extends ClientBundle  {
 
     interface MyCss extends CssResource {

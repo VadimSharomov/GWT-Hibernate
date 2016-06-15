@@ -36,7 +36,7 @@ public class TestJunit {
         byte[] resultHashPassword = new byte[]{-115, 100, 114, -127, 91, 105, 93, -42, 19, -68, 39, 33, -105, -30, 1, 60, -46, -37, 40, -6, 73, 55, 53, -18, 7, 83, 77, 91, 58, -32, 43, -120};
         byte[] saltPassword = new byte[]{65, 87, -7, 108, 110, 46, 21, 40, 76, 52, -34, 125, -87, 100, -73, 33, 82, -2, -33, -41, -27, -54, -1, 30, -81, 92, 47, 121, -51, 48, 46, -106};
 
-        assertTrue(Arrays.equals(resultHashPassword, mainRpcService.hashPassword(password.toCharArray(), saltPassword, 1, 256)));
+        assertTrue(Arrays.equals(resultHashPassword, mainRpcService.getHashPassword(password.toCharArray(), saltPassword)));
     }
 
     @Test

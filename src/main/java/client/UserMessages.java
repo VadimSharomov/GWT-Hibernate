@@ -2,11 +2,7 @@ package client;
 
 import com.google.gwt.i18n.client.Messages;
 
-/**
- * Created by Vadim on 19.05.2016.
- *
- */
-public interface UserMessages extends Messages{
+interface UserMessages extends Messages{
 
     @Messages.DefaultMessage("Login")
     String login();

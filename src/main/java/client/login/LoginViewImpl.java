@@ -9,10 +9,6 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.ui.*;
 
-/**
- * Created by Vadim on 16.05.2016.
- *
- */
 public class LoginViewImpl extends Composite implements LoginView {
     private static LoginUiBinder uiBinder = GWT.create(LoginUiBinder.class);
 
@@ -40,9 +36,9 @@ public class LoginViewImpl extends Composite implements LoginView {
     @UiField
     Anchor logoutLink;
     @UiField
-    Label completionLabel1;
+    Label label1;
     @UiField
-    Label completionLabel2;
+    Label label2;
     @UiField
     Button buttonSubmit;
     @UiField
@@ -68,13 +64,13 @@ public class LoginViewImpl extends Composite implements LoginView {
     }
 
     @Override
-    public Label getCompletionLabel1() {
-        return completionLabel1;
+    public Label getLabel1() {
+        return label1;
     }
 
     @Override
-    public Label getCompletionLabel2() {
-        return completionLabel2;
+    public Label getLabel2() {
+        return label2;
     }
 
     @Override

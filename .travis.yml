@@ -7,9 +7,3 @@ addons:
  apt:
    packages:
      - oracle-java8-installer
-     
-notifications:
-  email:
-  - sharomov.v@gmail.com
-  on_success: always
-  on_failure: never

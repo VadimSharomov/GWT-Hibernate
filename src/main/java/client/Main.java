@@ -27,74 +27,33 @@ public class Main implements EntryPoint {
      */
     public void onModuleLoad() {
         final LoginViewImpl loginView = new LoginViewImpl();
-        logger.log(Level.INFO, "onModuleLoad() - success");
-        logger.log(Level.INFO, "Current locale: " + currentLocal);
+        logging("onModuleLoad() - success");
+        logging("Current locale: " + currentLocal);
+        renderingLoginPage(loginView);
 
-        loginView.getLoginLabel().setText(messages.login());
-        loginView.getPasswordLabel().setText(messages.password());
-        loginView.getButtonSubmit().setText(messages.submit());
-
-        loginView.getImageLogo().setUrl("imageLogo.jpg");
-        loginView.getLogoLabel().setText("GWT Productivity for developers, performance for users");
-        loginView.getLabelFooter().setText("© 2016 Company Name");
-        loginView.getLogoutLink().setVisible(false);
-
-//        loginView.getLoginBox().addKeyDownHandler(new KeyDownHandler() {
-//            @Override
-//            public void onKeyDown(KeyDownEvent event) {
-
-//            }
-//        });
-
-        /**
-         * Add click handler to button Submit.
-         */
+        //Add click handler to button Submit.
         loginView.getButtonSubmit().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                LogginUser();
-            }
-
-            private void LogginUser() {
                 final String login = loginView.getLoginBox().getValue();
                 final String password = loginView.getPasswordBox().getValue();
-
-                loginView.getCompletionLabel1().setText("");
-                loginView.getCompletionLabel2().setText("");
 
                 //send login and password to server
                 rpcService.loginUser(login, password, new AsyncCallback<User>() {
                     @Override
                     public void onFailure(Throwable caught) {
-                        loginView.getCompletionLabel2().setText("rpcService.loginUser() - onFailure ");
-                        logger.log(Level.SEVERE, "Fail: onFailure(Throwable caught) in rpcService.loginUser(login, password, new AsyncCallback<User>()");
+                        showError(loginView, "Service not available");
+                        logging("Fail: onFailure() in rpcService.loginUser()");
                     }
 
                     @Override
                     public void onSuccess(User user) {
                         if (user != null) {
-                            String greeting = getGreetingOfDay();
-
-                            loginView.getLoginLabel().setVisible(false);
-                            loginView.getPasswordLabel().setVisible(false);
-                            loginView.getLoginBox().setVisible(false);
-                            loginView.getPasswordBox().setVisible(false);
-                            loginView.getButtonSubmit().setVisible(false);
-
-                            if (currentLocal.contains("default")) {
-                                loginView.getLogoutLink().setHref("Main.html");
-                            } else {
-                                loginView.getLogoutLink().setHref("Main.html?locale=" + currentLocal);
-                            }
-                            loginView.getLogoutLink().setText(messages.logout());
-                            loginView.getLogoutLink().setVisible(true);
-
-                            loginView.getCompletionLabel1().setText(greeting + ", " + user.getName() + ".");
-
-                            logger.log(Level.INFO, "Login success");
+                            renderingHomePage(user, loginView);
+                            logging("Login success");
                         } else {
-                            loginView.getCompletionLabel2().setText(messages.loginFailed());
-                            logger.log(Level.SEVERE, "Login failed");
+                            showError(loginView, messages.loginFailed());
+                            logging("Login failed");
                         }
                     }
                 });
@@ -104,28 +63,79 @@ public class Main implements EntryPoint {
         RootPanel.get().add(loginView);
     }
 
+    private void showError(LoginViewImpl loginView, String text) {
+        loginView.getLabel2().setText(text);
+    }
+
+    private void logging(String msg) {
+        logger.log(Level.SEVERE, msg);
+    }
+
+    private void renderingLoginPage(LoginViewImpl loginView) {
+        loginView.getLoginLabel().setText(messages.login());
+        loginView.getPasswordLabel().setText(messages.password());
+        loginView.getButtonSubmit().setText(messages.submit());
+        loginView.getLogoutLink().setVisible(false);
+
+        showLogoAndCopyright(loginView);
+    }
+
+    private void showLogoAndCopyright(LoginViewImpl loginView) {
+        loginView.getImageLogo().setUrl("imageLogo.jpg");
+        loginView.getLogoLabel().setText("GWT Productivity for developers, performance for users");
+        loginView.getLabelFooter().setText("© 2016 Company Name");
+    }
+
+    //to get ru locale add to the end URL "?locale=ru"
+    private void renderingHomePage(User user, LoginViewImpl loginView) {
+        hideLoginFields(loginView);
+
+        if (currentLocal.contains("default")) {
+            loginView.getLogoutLink().setHref("Main.html");
+        } else {
+            loginView.getLogoutLink().setHref("Main.html?locale=" + currentLocal);
+        }
+        loginView.getLogoutLink().setText(messages.logout());
+        loginView.getLogoutLink().setVisible(true);
+        loginView.getLabel1().setText(getGreetingDependingOnTimeOfDay() + ", " + user.getName() + ".");
+    }
+
+    private void hideLoginFields(LoginViewImpl loginView) {
+        loginView.getLoginLabel().setVisible(false);
+        loginView.getPasswordLabel().setVisible(false);
+        loginView.getLoginBox().setVisible(false);
+        loginView.getPasswordBox().setVisible(false);
+        loginView.getButtonSubmit().setVisible(false);
+    }
+
     /**
      * Generation greetings depending on the time of day
      */
-    private String getGreetingOfDay() {
+    private String getGreetingDependingOnTimeOfDay() {
         Date date = new Date();
         DateTimeFormat dtf = DateTimeFormat.getFormat("HH:mm");
         String time = dtf.format(date, TimeZone.createTimeZone(date.getTimezoneOffset()));
-        logger.log(Level.INFO, "Local client time: " + time);
+        logging("Local client time: " + time);
         int hour = Integer.parseInt(time.split(":")[0]);
         int minute = Integer.parseInt(time.split(":")[1]);
+        int timeInMinutes = hour * 60 + minute;
 
-        if ((hour > 16) && (minute > 0) && (hour < 21)) {
+        int morning = 6 * 60;
+        int day = 11 * 60;
+        int evening = 16 * 60;
+        int night = 21 * 60;
+
+        if ((timeInMinutes > evening) && (timeInMinutes < night)) {
             return messages.goodEvening();
-        } else if ((hour > 21) && (minute > 0) && (hour < 23) && (minute < 59)) {
+        } else if ((timeInMinutes > night) || (timeInMinutes < morning)) {
             return messages.goodNight();
-        } else if ((hour > 6) && (minute > 0) && (hour < 11)) {
+        } else if ((timeInMinutes > morning) && (timeInMinutes < day)) {
             return messages.goodMorning();
         } else return messages.goodDay();
     }
 
     /**
-     * Test method
+     * Method for testing
      */
     public String getGreeting(String name) {
         return "Hello " + name + "!";

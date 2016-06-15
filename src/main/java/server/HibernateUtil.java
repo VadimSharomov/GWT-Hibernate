@@ -5,14 +5,10 @@ import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 
-/**
- * Created by Vadim on 16.05.2016.
- *
- */
-public class HibernateUtil {
+class HibernateUtil {
     private static SessionFactory sessionFactory = buildSessionFactory();
 
-    protected static SessionFactory buildSessionFactory() {
+    private static SessionFactory buildSessionFactory() {
         final StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
                 .configure()
                 .build();
@@ -25,7 +21,7 @@ public class HibernateUtil {
         return sessionFactory;
     }
 
-    public static SessionFactory getSessionFactory(){
+    static SessionFactory getSessionFactory(){
         return sessionFactory;
     }
 

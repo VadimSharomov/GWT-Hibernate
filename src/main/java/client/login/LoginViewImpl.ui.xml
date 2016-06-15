@@ -23,8 +23,8 @@
 
             <gwt:Button ui:field="buttonSubmit" text="Submit" styleName="{res.style.loginButton}"/>
 
-            <gwt:Label ui:field="completionLabel1" styleName="{res.style.blackText}"/>
-            <gwt:Label ui:field="completionLabel2" styleName="{res.style.redText}"/>
+            <gwt:Label ui:field="label1" styleName="{res.style.blackText}"/>
+            <gwt:Label ui:field="label2" styleName="{res.style.redText}"/>
             <gwt:Anchor ui:field="logoutLink" styleName="{res.style.blackText}"/>
         </gwt:VerticalPanel>
 

@@ -2,15 +2,11 @@ package client.login;
 
 import com.google.gwt.user.client.ui.*;
 
-/**
- * Created by Vadim on 16.05.2016.
- *
- */
-public interface LoginView {
+interface LoginView {
 
-    Label getCompletionLabel1();
+    Label getLabel1();
 
-    Label getCompletionLabel2();
+    Label getLabel2();
 
     Image getImageLogo();
 
