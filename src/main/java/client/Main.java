@@ -102,6 +102,8 @@ public class Main implements EntryPoint {
 
     private void hideLoginFields(LoginViewImpl loginView) {
         loginView.getLoginLabel().setVisible(false);
+        loginView.getLabel2().setText("");
+        loginView.getLabel2().setVisible(false);
         loginView.getPasswordLabel().setVisible(false);
         loginView.getLoginBox().setVisible(false);
         loginView.getPasswordBox().setVisible(false);
