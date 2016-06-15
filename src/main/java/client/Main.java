@@ -31,6 +31,7 @@ public class Main implements EntryPoint {
         logging("Current locale: " + currentLocal);
         renderingLoginPage(loginView);
 
+        //noinspection Convert2Lambda
         loginView.getButtonSubmit().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
@@ -108,7 +109,7 @@ public class Main implements EntryPoint {
         loginView.getButtonSubmit().setVisible(false);
     }
 
-    //Generation greetings depending on the time of day
+    @SuppressWarnings("deprecation")
     private String getGreetingDependingOnTimeOfDay() {
         Date date = new Date();
         DateTimeFormat dtf = DateTimeFormat.getFormat("HH:mm");
@@ -133,7 +134,7 @@ public class Main implements EntryPoint {
     }
 
     //Method for testing
-    public String getGreeting(String name) {
-        return "Hello " + name + "!";
+    public String getGreeting(String greeting) {
+        return greeting + ", World!";
     }
 }

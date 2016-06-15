@@ -38,9 +38,7 @@ public class TestGWTTestCase extends GWTTestCase {
 
     public void testGetGreeting() {
         Main testMain = new Main();
-        String name = "World";
-        String expectedGreeting = "Hello " + name + "!";
-        assertEquals(expectedGreeting, testMain.getGreeting(name));
+        assertEquals("Hello, World!", testMain.getGreeting("Hello"));
     }
 
     public void testLoginView() {

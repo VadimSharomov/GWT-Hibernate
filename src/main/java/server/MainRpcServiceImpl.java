@@ -30,6 +30,7 @@ public class MainRpcServiceImpl extends RemoteServiceServlet implements MainRpcS
         org.apache.log4j.BasicConfigurator.configure(new NullAppender());
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public List<User> getAllUsers() {
         Query query = session.createQuery("from User");
@@ -127,7 +128,7 @@ public class MainRpcServiceImpl extends RemoteServiceServlet implements MainRpcS
     }
 
     /**
-     * Test method
+     * Method for testing RPC service
      */
     @Override
     public String getGreeting(String greeting) {
