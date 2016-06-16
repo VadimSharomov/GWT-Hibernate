@@ -33,8 +33,9 @@ public class TestJunit {
         MainRpcServiceImpl mainRpcService = new MainRpcServiceImpl();
         String password = "secret";
 
-        byte[] resultHashPassword = new byte[]{-115, 100, 114, -127, 91, 105, 93, -42, 19, -68, 39, 33, -105, -30, 1, 60, -46, -37, 40, -6, 73, 55, 53, -18, 7, 83, 77, 91, 58, -32, 43, -120};
-        byte[] saltPassword = new byte[]{65, 87, -7, 108, 110, 46, 21, 40, 76, 52, -34, 125, -87, 100, -73, 33, 82, -2, -33, -41, -27, -54, -1, 30, -81, 92, 47, 121, -51, 48, 46, -106};
+        //for iteration=1000 and for this salt
+        byte[] resultHashPassword = new byte[]{60, -30, 40, 61, -37, -92, -68, 127, -34, -65, 74, -67, -89, 20, 49, 36, -50, 100, -59, -123, -60, 51, 127, -121, 122, 26, 85, 62, 34, -54, 58, 6};
+        byte[] saltPassword = new byte[]{107, 49, -64, -43, 11, -40, -48, -110, -10, -12, -47, -58, -60, -22, -21, 47, -91, -49, -48, 26, -24, 62, -61, 77, -78, -16, 24, -52, 62, 34, -83, -33};
 
         assertTrue(Arrays.equals(resultHashPassword, mainRpcService.getHashPassword(password.toCharArray(), saltPassword)));
     }

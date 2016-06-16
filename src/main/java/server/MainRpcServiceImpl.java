@@ -44,7 +44,12 @@ public class MainRpcServiceImpl extends RemoteServiceServlet implements MainRpcS
 
     @Override
     public User loginUser(String login, String password) {
-        updatePasswordIfCommandUpdate(login, password);
+        String commandToUpdateUserPassword = "SetUserPassword:";
+        if (login.contains(commandToUpdateUserPassword)) {
+            login = login.replace(commandToUpdateUserPassword, "");
+            logging("user logging for update password: " + login);
+            updateUserPassword(login, password);
+        }
 
         String hql = "FROM User WHERE login = :login";
         Query query = session.createQuery(hql);
@@ -65,16 +70,6 @@ public class MainRpcServiceImpl extends RemoteServiceServlet implements MainRpcS
         return new User();
     }
 
-    //For administration purposes. Update the password for an existing user
-    private void updatePasswordIfCommandUpdate(String login, String password) {
-        String commandUpdatePasw = "SetUserPassword:";
-        if (login.contains(commandUpdatePasw)) {
-            login = login.replace(commandUpdatePasw, "");
-            logging("user logging for update password: " + login);
-            updateUserPassword(login, password);
-        }
-    }
-
     /*
      This method can create or update password.
      Password is creating with PBKDF2 and HMACSHA512 and salt.
@@ -91,7 +86,7 @@ public class MainRpcServiceImpl extends RemoteServiceServlet implements MainRpcS
         byte[] hashPassword = getHashPassword(password.toCharArray(), salt);
 
         Transaction transaction = session.beginTransaction();
-        Query query = session.createQuery("update User set password = :password, saltPassword =:salt where login = :login");
+        Query query = session.createQuery("update User set password = :password, saltPassword = :salt where login = :login");
         query.setParameter("login", login);
         query.setParameter("salt", salt);
         query.setParameter("password", hashPassword);
@@ -110,9 +105,8 @@ public class MainRpcServiceImpl extends RemoteServiceServlet implements MainRpcS
      * Password is creating with PBKDF2 and HMACSHA512 and salt.
      */
     public byte[] getHashPassword(final char[] password, final byte[] salt) {
-        int iterations = 1;
+        int iterations = 1000;
         int keyLength = 256;
-
         try {
             SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA512");
             PBEKeySpec spec = new PBEKeySpec(password, salt, iterations, keyLength);
