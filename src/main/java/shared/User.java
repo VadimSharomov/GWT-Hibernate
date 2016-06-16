@@ -11,6 +11,7 @@ public class User implements Serializable {
     private byte[] password;
     private byte[] saltPassword;
     private String name;
+    private String sessionId;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -64,6 +65,15 @@ public class User implements Serializable {
         this.saltPassword = saltPassword;
     }
 
+    @Transient
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
+    }
+
     @SuppressWarnings("RedundantIfStatement")
     @Override
     public boolean equals(Object o) {
@@ -89,6 +99,6 @@ public class User implements Serializable {
 
     @Override
     public String toString() {
-        return " User: id=" + id + ", login=" + login + ", name=" + name + "\n";
+        return " User: id=" + id + ", login=" + login + ", name=" + name + ", sessionId=" + sessionId;
     }
 }

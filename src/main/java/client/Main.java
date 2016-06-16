@@ -21,13 +21,14 @@ public class Main implements EntryPoint {
     private UserMessages messages = GWT.create(UserMessages.class);
     private static String currentLocal = com.google.gwt.i18n.client.LocaleInfo.getCurrentLocale().getLocaleName();
     private MainRpcServiceAsync rpcService = GWT.create(MainRpcService.class);
+    private User currentUser;
 
     /**
      * Entry point method.
      */
     public void onModuleLoad() {
         final LoginViewImpl loginView = new LoginViewImpl();
-        logging("onModuleLoad() - success");
+        logging("Client onModuleLoad - success");
         logging("Current locale: " + currentLocal);
         renderingLoginPage(loginView);
 
@@ -43,17 +44,18 @@ public class Main implements EntryPoint {
                     @Override
                     public void onFailure(Throwable caught) {
                         showError(loginView, "Service not available");
-                        logging("Fail: onFailure() in rpcService.loginUser()");
+                        logging("Fail: onFailure in rpcService.loginUser");
                     }
 
                     @Override
                     public void onSuccess(User user) {
                         if (user.getLogin() != null) {
                             renderingHomePage(user, loginView);
-                            logging("Login success");
+                            logging("User login success: " + user);
+                            currentUser = user;
                         } else {
                             showError(loginView, messages.loginFailed());
-                            logging("Login failed");
+                            logging("User login failed: " + login);
                         }
                     }
                 });
@@ -86,6 +88,7 @@ public class Main implements EntryPoint {
         loginView.getLabelFooter().setText("© 2016 Company Name");
     }
 
+    @SuppressWarnings("Convert2Lambda")
     private void renderingHomePage(User user, LoginViewImpl loginView) {
         hideLoginFields(loginView);
 
@@ -96,6 +99,30 @@ public class Main implements EntryPoint {
         }
         loginView.getLogoutLink().setText(messages.logout());
         loginView.getLogoutLink().setVisible(true);
+
+        loginView.getLogoutLink().addClickHandler(new ClickHandler() {
+            @SuppressWarnings("unchecked")
+            @Override
+            public void onClick(ClickEvent event) {
+                if (currentUser != null) {
+                    rpcService.logOut(currentUser.getLogin(), new AsyncCallback() {
+
+                        @Override
+                        public void onFailure(Throwable caught) {
+                            logging("User logout failed: " + currentUser.getLogin() + ", sessionId:" + currentUser.getSessionId());
+                        }
+
+                        @Override
+                        public void onSuccess(Object result) {
+                            logging("User logout success: " + currentUser.getLogin() + ", sessionId:" + currentUser.getSessionId());
+                            currentUser = null;
+                        }
+                    });
+                }
+            }
+        });
+
+
         loginView.getLabel1().setText(getGreetingDependingOnTimeOfDay() + ", " + user.getName() + ".");
     }
 

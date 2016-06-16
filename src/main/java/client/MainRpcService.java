@@ -15,6 +15,8 @@ public interface MainRpcService extends RemoteService {
 
     User loginUser(String login, String password);
 
+    void logOut(String login);
+
     String getGreeting(String greeting);
 
 }

@@ -13,6 +13,7 @@ import shared.User;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
+import javax.servlet.http.HttpSession;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Arrays;
@@ -47,7 +48,7 @@ public class MainRpcServiceImpl extends RemoteServiceServlet implements MainRpcS
         String commandToUpdateUserPassword = "SetUserPassword:";
         if (login.contains(commandToUpdateUserPassword)) {
             login = login.replace(commandToUpdateUserPassword, "");
-            logging("user logging for update password: " + login);
+            logging("User logging for update password: " + login);
             updateUserPassword(login, password);
         }
 
@@ -60,14 +61,27 @@ public class MainRpcServiceImpl extends RemoteServiceServlet implements MainRpcS
             User user = (User) us;
             if (login.equals(user.getLogin())) {
                 byte[] hashPassword = getHashPassword(password.toCharArray(), user.getSaltPassword());
-                logging("user logging: " + user);
+                logging("User logging: " + user);
                 if (Arrays.equals(hashPassword, user.getPassword())) {
-                    logging("user logging success: " + user);
+                    user.setSessionId(getSession().getId());
+                    getSession().setAttribute(user.getLogin(), user.getSessionId());
+                    getSession().setMaxInactiveInterval(24 * 3600);
+                    logging("User logging success: " + user);
                     return user;
                 }
             }
         }
         return new User();
+    }
+
+    @Override
+    public void logOut(String login) {
+        String sessionId = (String) getSession().getAttribute(login);
+        logging("User logout: " + login + ", sessionId: " + sessionId);
+        if (sessionId != null) {
+            getSession().removeAttribute(login);
+//            getSession().invalidate();
+        }
     }
 
     /*
@@ -120,6 +134,10 @@ public class MainRpcServiceImpl extends RemoteServiceServlet implements MainRpcS
 
     private void logging(String msg) {
         logger.log(Level.SEVERE, msg);
+    }
+
+    private HttpSession getSession() {
+        return this.getThreadLocalRequest().getSession(true);
     }
 
     /**
