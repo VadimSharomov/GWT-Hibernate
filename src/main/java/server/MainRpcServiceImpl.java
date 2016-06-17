@@ -63,9 +63,11 @@ public class MainRpcServiceImpl extends RemoteServiceServlet implements MainRpcS
                 byte[] hashPassword = getHashPassword(password.toCharArray(), user.getSaltPassword());
                 logging("User logging: " + user);
                 if (Arrays.equals(hashPassword, user.getPassword())) {
+                    user.setPassword(new byte[]{});
+                    user.setSaltPassword(new byte[]{});
                     user.setSessionId(getSession().getId());
-                    getSession().setAttribute(user.getLogin(), user.getSessionId());
-                    getSession().setMaxInactiveInterval(24 * 3600);
+
+                    storeUserInSession(user);
                     logging("User logging success: " + user);
                     return user;
                 }
@@ -74,11 +76,16 @@ public class MainRpcServiceImpl extends RemoteServiceServlet implements MainRpcS
         return new User();
     }
 
+    private void storeUserInSession(User user) {
+        getSession().setAttribute(user.getLogin(), user);
+        getSession().setMaxInactiveInterval(24 * 3600);
+    }
+
     @Override
     public void logOut(String login) {
-        String sessionId = (String) getSession().getAttribute(login);
-        logging("User logout: " + login + ", sessionId: " + sessionId);
-        if (sessionId != null) {
+        User user = (User) getSession().getAttribute(login);
+        logging("User logout: " + login);
+        if (user != null) {
             getSession().removeAttribute(login);
 //            getSession().invalidate();
         }
