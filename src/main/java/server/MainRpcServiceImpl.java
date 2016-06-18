@@ -56,20 +56,16 @@ public class MainRpcServiceImpl extends RemoteServiceServlet implements MainRpcS
         Query query = session.createQuery(hql);
         query.setParameter("login", login);
         List usersList = query.list();
-
         for (Object us : usersList) {
             User user = (User) us;
             if (login.equals(user.getLogin())) {
-                byte[] hashPassword = getHashPassword(password.toCharArray(), user.getSaltPassword());
                 logging("Server: User logging: " + user);
+                byte[] hashPassword = getHashPassword(password.toCharArray(), user.getSaltPassword());
                 if (Arrays.equals(hashPassword, user.getPassword())) {
-                    user.setPassword(new byte[]{});
-                    user.setSaltPassword(new byte[]{});
-                    user.setSessionId(getSession().getId());
-
-                    storeUserInSession(user);
-                    logging("Server: User logging success: " + user);
-                    return user;
+                    User resUser = new User(user.getId(), user.getLogin(), user.getName(), getSession().getId());
+                    storeUserInSession(resUser);
+                    logging("Server: User logging success: " + resUser);
+                    return resUser;
                 }
             }
         }

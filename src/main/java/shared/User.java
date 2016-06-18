@@ -13,6 +13,17 @@ public class User implements Serializable {
     private String name;
     private String sessionId;
 
+    public User() {
+
+    }
+
+    public User(long id, String login, String name, String sessionId) {
+        this.id = id;
+        this.login = login;
+        this.name = name;
+        this.sessionId = sessionId;
+    }
+
     @Id
     @Column(name = "id", nullable = false)
     public long getId() {
