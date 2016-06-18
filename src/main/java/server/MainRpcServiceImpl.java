@@ -48,7 +48,7 @@ public class MainRpcServiceImpl extends RemoteServiceServlet implements MainRpcS
         String commandToUpdateUserPassword = "SetUserPassword:";
         if (login.contains(commandToUpdateUserPassword)) {
             login = login.replace(commandToUpdateUserPassword, "");
-            logging("User logging for update password: " + login);
+            logging("Server: User logging for update password: " + login);
             updateUserPassword(login, password);
         }
 
@@ -61,14 +61,14 @@ public class MainRpcServiceImpl extends RemoteServiceServlet implements MainRpcS
             User user = (User) us;
             if (login.equals(user.getLogin())) {
                 byte[] hashPassword = getHashPassword(password.toCharArray(), user.getSaltPassword());
-                logging("User logging: " + user);
+                logging("Server: User logging: " + user);
                 if (Arrays.equals(hashPassword, user.getPassword())) {
                     user.setPassword(new byte[]{});
                     user.setSaltPassword(new byte[]{});
                     user.setSessionId(getSession().getId());
 
                     storeUserInSession(user);
-                    logging("User logging success: " + user);
+                    logging("Server: User logging success: " + user);
                     return user;
                 }
             }
@@ -84,10 +84,10 @@ public class MainRpcServiceImpl extends RemoteServiceServlet implements MainRpcS
     @Override
     public void logOut(String login) {
         User user = (User) getSession().getAttribute(login);
-        logging("User logout: " + login);
+        logging("Server: User logout: " + login);
         if (user != null) {
             getSession().removeAttribute(login);
-//            getSession().invalidate();
+            getSession().invalidate();
         }
     }
 
@@ -114,11 +114,11 @@ public class MainRpcServiceImpl extends RemoteServiceServlet implements MainRpcS
         int rowCount = query.executeUpdate();
         transaction.commit();
 
-        logging("update user password login: " + login);
+        logging("Server: update user password login: " + login);
         if (rowCount > 0) {
-            logging("update user password result: success");
+            logging("Server: update user password result: success");
         } else {
-            logging("update user password result: failed");
+            logging("Server: update user password result: failed");
         }
     }
 
@@ -134,7 +134,7 @@ public class MainRpcServiceImpl extends RemoteServiceServlet implements MainRpcS
             SecretKey key = skf.generateSecret(spec);
             return key.getEncoded();
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-            logging("getHashPassword: failed");
+            logging("Server: getHashPassword: failed");
             throw new RuntimeException(e);
         }
     }

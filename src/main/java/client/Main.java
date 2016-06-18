@@ -3,8 +3,7 @@ package client;
 import client.login.LoginViewImpl;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.*;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.TimeZone;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -28,41 +27,58 @@ public class Main implements EntryPoint {
      */
     public void onModuleLoad() {
         final LoginViewImpl loginView = new LoginViewImpl();
-        logging("Client onModuleLoad - success");
-        logging("Current locale: " + currentLocal);
+        logging("Client: onModuleLoad - success");
+        logging("Client: current locale: " + currentLocal);
         renderingLoginPage(loginView);
+
+        //noinspection Convert2Lambda
+        KeyDownHandler keyDownHandler = new KeyDownHandler() {
+            @Override
+            public void onKeyDown(KeyDownEvent event) {
+                if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+                    keyDownAndClickHandler(loginView);
+                }
+            }
+        };
+
+        loginView.getLoginBox().addKeyDownHandler(keyDownHandler);
+        loginView.getPasswordBox().addKeyDownHandler(keyDownHandler);
 
         //noinspection Convert2Lambda
         loginView.getButtonSubmit().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                final String login = loginView.getLoginBox().getValue();
-                final String password = loginView.getPasswordBox().getValue();
-
-                //send login and password to server
-                rpcService.loginUser(login, password, new AsyncCallback<User>() {
-                    @Override
-                    public void onFailure(Throwable caught) {
-                        showError(loginView, "Service not available");
-                        logging("Fail: onFailure in rpcService.loginUser");
-                    }
-
-                    @Override
-                    public void onSuccess(User user) {
-                        if (user.getLogin() != null) {
-                            renderingHomePage(user, loginView);
-                            logging("User login success: " + user);
-                            currentUser = user;
-                        } else {
-                            showError(loginView, messages.loginFailed());
-                            logging("User login failed: " + login);
-                        }
-                    }
-                });
+                keyDownAndClickHandler(loginView);
             }
         });
 
         RootPanel.get().add(loginView);
+    }
+
+    private void keyDownAndClickHandler(final LoginViewImpl loginView) {
+        final String login = loginView.getLoginBox().getValue();
+        final String password = loginView.getPasswordBox().getValue();
+
+        //send login and password to server
+        rpcService.loginUser(login, password, new AsyncCallback<User>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                showError(loginView, "Service not available");
+                logging("Client: onFailure in rpcService.loginUser");
+            }
+
+            @Override
+            public void onSuccess(User user) {
+                if (user.getLogin() != null) {
+                    renderingHomePage(user, loginView);
+                    logging("Client: User login success: " + user);
+                    currentUser = user;
+                } else {
+                    showError(loginView, messages.loginFailed());
+                    logging("Client: User login failed: " + login);
+                }
+            }
+        });
     }
 
     private void showError(LoginViewImpl loginView, String text) {
@@ -88,7 +104,6 @@ public class Main implements EntryPoint {
         loginView.getLabelFooter().setText("© 2016 Company Name");
     }
 
-    @SuppressWarnings("Convert2Lambda")
     private void renderingHomePage(User user, LoginViewImpl loginView) {
         hideLoginFields(loginView);
 
@@ -100,6 +115,7 @@ public class Main implements EntryPoint {
         loginView.getLogoutLink().setText(messages.logout());
         loginView.getLogoutLink().setVisible(true);
 
+        //noinspection Convert2Lambda
         loginView.getLogoutLink().addClickHandler(new ClickHandler() {
             @SuppressWarnings("unchecked")
             @Override
@@ -109,19 +125,18 @@ public class Main implements EntryPoint {
 
                         @Override
                         public void onFailure(Throwable caught) {
-                            logging("User logout failed: " + currentUser.getLogin() + ", sessionId:" + currentUser.getSessionId());
+                            logging("Client: User logout failed: " + currentUser.getLogin() + ", sessionId:" + currentUser.getSessionId());
                         }
 
                         @Override
                         public void onSuccess(Object result) {
-                            logging("User logout success: " + currentUser.getLogin() + ", sessionId:" + currentUser.getSessionId());
+                            logging("Client: User logout success: " + currentUser.getLogin() + ", sessionId:" + currentUser.getSessionId());
                             currentUser = null;
                         }
                     });
                 }
             }
         });
-
 
         loginView.getLabel1().setText(getGreetingDependingOnTimeOfDay() + ", " + user.getName() + ".");
     }
@@ -141,7 +156,7 @@ public class Main implements EntryPoint {
         Date date = new Date();
         DateTimeFormat dtf = DateTimeFormat.getFormat("HH:mm");
         String time = dtf.format(date, TimeZone.createTimeZone(date.getTimezoneOffset()));
-        logging("Local client time: " + time);
+        logging("Client: Local client time: " + time);
         int hour = Integer.parseInt(time.split(":")[0]);
         int minute = Integer.parseInt(time.split(":")[1]);
         int timeInMinutes = hour * 60 + minute;
