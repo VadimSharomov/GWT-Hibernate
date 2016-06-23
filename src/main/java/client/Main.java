@@ -138,7 +138,8 @@ public class Main implements EntryPoint {
             }
         });
 
-        loginView.getLabel1().setText(getGreetingDependingOnTimeOfDay() + ", " + user.getName() + ".");
+        String localTime = getUserLocalTime();
+        loginView.getLabel1().setText(getGreetingDependingOnTimeOfDay(localTime) + ", " + user.getName() + ".");
     }
 
     private void hideLoginFields(LoginViewImpl loginView) {
@@ -152,13 +153,17 @@ public class Main implements EntryPoint {
     }
 
     @SuppressWarnings("deprecation")
-    private String getGreetingDependingOnTimeOfDay() {
+    private String getUserLocalTime() {
         Date date = new Date();
         DateTimeFormat dtf = DateTimeFormat.getFormat("HH:mm");
-        String time = dtf.format(date, TimeZone.createTimeZone(date.getTimezoneOffset()));
-        logging("Client: Local client time: " + time);
-        int hour = Integer.parseInt(time.split(":")[0]);
-        int minute = Integer.parseInt(time.split(":")[1]);
+        String localTime = dtf.format(date, TimeZone.createTimeZone(date.getTimezoneOffset()));
+        logging("Client: Local client time: " + localTime);
+        return localTime;
+    }
+
+    public String getGreetingDependingOnTimeOfDay(String localTime) {
+        int hour = Integer.parseInt(localTime.split(":")[0]);
+        int minute = Integer.parseInt(localTime.split(":")[1]);
         int timeInMinutes = hour * 60 + minute;
 
         int morning = 6 * 60;

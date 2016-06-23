@@ -38,4 +38,6 @@ public class TestJunit {
         assertTrue(Arrays.equals(resultHashPassword, mainRpcService.getHashPassword(password.toCharArray(), saltPassword)));
     }
 
+
+
 }

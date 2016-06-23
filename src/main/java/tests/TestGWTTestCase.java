@@ -10,7 +10,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.ServiceDefTarget;
 
 
-
 public class TestGWTTestCase extends GWTTestCase {
     @Override
     public String getModuleName() {
@@ -46,6 +45,19 @@ public class TestGWTTestCase extends GWTTestCase {
         LoginViewImpl loginView = new LoginViewImpl();
         loginView.getLabel1().setText(greeting);
         assertEquals(greeting, loginView.getLabel1().getText());
+    }
+
+    public void testGreetingDependingOnTimeOfDay() {
+        Main main = new Main();
+        String morningTime = "07:40";
+        String dayTime = "14:25:50";
+        String eveningTime = "20:45:00";
+        String nightTime = "01:05:00";
+
+        assertEquals(main.getGreetingDependingOnTimeOfDay(morningTime), "Good morning");
+        assertEquals(main.getGreetingDependingOnTimeOfDay(dayTime), "Good day");
+        assertEquals(main.getGreetingDependingOnTimeOfDay(eveningTime), "Good evening");
+        assertEquals(main.getGreetingDependingOnTimeOfDay(nightTime), "Good night");
     }
 }
 
