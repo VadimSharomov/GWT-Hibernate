@@ -179,9 +179,4 @@ public class Main implements EntryPoint {
             return messages.goodMorning();
         } else return messages.goodDay();
     }
-
-    //Method for testing
-    public String getGreeting(String greeting) {
-        return greeting + ", World!";
-    }
 }
