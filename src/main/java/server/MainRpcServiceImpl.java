@@ -31,18 +31,6 @@ public class MainRpcServiceImpl extends RemoteServiceServlet implements MainRpcS
         org.apache.log4j.BasicConfigurator.configure(new NullAppender());
     }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public List<User> getAllUsers() {
-        Query query = session.createQuery("from User");
-        return query.list();
-    }
-
-    @Override
-    public void saveUser(User user) {
-        session.save(user);
-    }
-
     @Override
     public User loginUser(String login, String password) {
         String commandToUpdateUserPassword = "SetUserPassword:";
@@ -84,6 +72,7 @@ public class MainRpcServiceImpl extends RemoteServiceServlet implements MainRpcS
         if (user != null) {
             getSession().removeAttribute(login);
             getSession().invalidate();
+            HibernateUtil.shutdown();
         }
     }
 

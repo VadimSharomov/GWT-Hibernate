@@ -4,9 +4,7 @@ import org.junit.Test;
 import server.MainRpcServiceImpl;
 import shared.User;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -40,12 +38,4 @@ public class TestJunit {
         assertTrue(Arrays.equals(resultHashPassword, mainRpcService.getHashPassword(password.toCharArray(), saltPassword)));
     }
 
-    @Test
-    public void testGetAllUsers() {
-        MainRpcServiceImpl mock = mock(MainRpcServiceImpl.class);
-        List<User> userList = new ArrayList<>();
-
-        when(mock.getAllUsers()).thenReturn(userList);
-        assertEquals(userList, mock.getAllUsers());
-    }
 }
