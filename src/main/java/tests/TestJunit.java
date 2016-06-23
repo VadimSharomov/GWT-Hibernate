@@ -17,13 +17,14 @@ public class TestJunit {
     @Test
     public void testLoginUser() {
         MainRpcServiceImpl mock = mock(MainRpcServiceImpl.class);
-        User user = new User();
+        User user = new User("ivan");
 
         when(mock.loginUser("ivan", "secret")).thenReturn(user);
-        assertEquals(user, mock.loginUser("ivan", "secret"));
+        assertEquals(user.getLogin(), mock.loginUser("ivan", "secret").getLogin());
 
-        when(mock.loginUser("ivan", "")).thenReturn(null);
-        assertEquals(null, mock.loginUser("ivan", ""));
+        user = new User();
+        when(mock.loginUser("ivan", "")).thenReturn(user);
+        assertEquals(user.getLogin(), mock.loginUser("ivan", "").getLogin());
     }
 
     @Test

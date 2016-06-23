@@ -24,6 +24,10 @@ public class User implements Serializable {
         this.sessionId = sessionId;
     }
 
+    public User(String login) {
+        this.login = login;
+    }
+
     @Id
     @Column(name = "id", nullable = false)
     public long getId() {
