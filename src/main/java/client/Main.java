@@ -8,15 +8,17 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.TimeZone;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootPanel;
+import org.slf4j.Logger;
 import shared.User;
 
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import static org.slf4j.LoggerFactory.getLogger;
+
 
 
 public class Main implements EntryPoint {
-    private static Logger logger = Logger.getLogger("MyLogger");
+    private final static Logger logger = getLogger(Main.class);
     private UserMessages messages = GWT.create(UserMessages.class);
     private static String currentLocal = com.google.gwt.i18n.client.LocaleInfo.getCurrentLocale().getLocaleName();
     private MainRpcServiceAsync rpcService = GWT.create(MainRpcService.class);
@@ -27,8 +29,8 @@ public class Main implements EntryPoint {
      */
     public void onModuleLoad() {
         final LoginViewImpl loginView = new LoginViewImpl();
-        logging("Client: onModuleLoad - success");
-        logging("Client: current locale: " + currentLocal);
+        logger.info("Client: onModuleLoad - success");
+        logger.info("Client: current locale: " + currentLocal);
         renderingLoginPage(loginView);
 
         //noinspection Convert2Lambda
@@ -64,18 +66,18 @@ public class Main implements EntryPoint {
             @Override
             public void onFailure(Throwable caught) {
                 showError(loginView, "Service not available");
-                logging("Client: onFailure in rpcService.loginUser");
+                logger.info("Client: onFailure in rpcService.loginUser");
             }
 
             @Override
             public void onSuccess(User user) {
                 if (user.getLogin() != null) {
                     renderingHomePage(user, loginView);
-                    logging("Client: User login success: " + user);
+                    logger.info("Client: User login success: " + user);
                     currentUser = user;
                 } else {
                     showError(loginView, messages.loginFailed());
-                    logging("Client: User login failed: " + login);
+                    logger.info("Client: User login failed: " + login);
                 }
             }
         });
@@ -83,10 +85,6 @@ public class Main implements EntryPoint {
 
     private void showError(LoginViewImpl loginView, String text) {
         loginView.getLabel2().setText(text);
-    }
-
-    private void logging(String msg) {
-        logger.log(Level.SEVERE, msg);
     }
 
     private void renderingLoginPage(LoginViewImpl loginView) {
@@ -125,12 +123,13 @@ public class Main implements EntryPoint {
 
                         @Override
                         public void onFailure(Throwable caught) {
-                            logging("Client: User logout failed: " + currentUser.getLogin() + ", sessionId:" + currentUser.getSessionId());
+                            logger.error("Client: User logout failed: " + currentUser.getLogin() + ", sessionId:" + currentUser.getSessionId());
+
                         }
 
                         @Override
                         public void onSuccess(Object result) {
-                            logging("Client: User logout success: " + currentUser.getLogin() + ", sessionId:" + currentUser.getSessionId());
+                            logger.info("Client: User logout success: " + currentUser.getLogin() + ", sessionId:" + currentUser.getSessionId());
                             currentUser = null;
                         }
                     });
@@ -157,7 +156,7 @@ public class Main implements EntryPoint {
         Date date = new Date();
         DateTimeFormat dtf = DateTimeFormat.getFormat("HH:mm");
         String localTime = dtf.format(date, TimeZone.createTimeZone(date.getTimezoneOffset()));
-        logging("Client: Local client time: " + localTime);
+        logger.info("Client: Local client time: " + localTime);
         return localTime;
     }
 
