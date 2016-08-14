@@ -8,6 +8,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.slf4j.Logger;
 import shared.User;
 
 import javax.crypto.SecretKey;
@@ -18,12 +19,13 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import static org.slf4j.LoggerFactory.getLogger;
+
 
 public class MainRpcServiceImpl extends RemoteServiceServlet implements MainRpcService {
     private Session session;
-    private Logger logger = Logger.getLogger("MyLogger");
+    private final static Logger logger = getLogger(MainRpcServiceImpl.class);
 
     public MainRpcServiceImpl() {
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
@@ -36,7 +38,7 @@ public class MainRpcServiceImpl extends RemoteServiceServlet implements MainRpcS
         String commandToUpdateUserPassword = "SetUserPassword:";
         if (login.contains(commandToUpdateUserPassword)) {
             login = login.replace(commandToUpdateUserPassword, "");
-            logging("Server: User logging for update password: " + login);
+            logger.info("Server: User logging for update password: " + login);
             updateUserPassword(login, password);
         }
 
@@ -47,12 +49,12 @@ public class MainRpcServiceImpl extends RemoteServiceServlet implements MainRpcS
         for (Object us : usersList) {
             User user = (User) us;
             if (login.equals(user.getLogin())) {
-                logging("Server: User logging: " + user);
+                logger.info("Server: User logging: " + user);
                 byte[] hashPassword = getHashPassword(password.toCharArray(), user.getSaltPassword());
                 if (Arrays.equals(hashPassword, user.getPassword())) {
                     User resUser = new User(user.getId(), user.getLogin(), user.getName(), getSession().getId());
                     storeUserInSession(resUser);
-                    logging("Server: User logging success: " + resUser);
+                    logger.info("Server: User logging success: " + resUser);
                     return resUser;
                 }
             }
@@ -68,7 +70,7 @@ public class MainRpcServiceImpl extends RemoteServiceServlet implements MainRpcS
     @Override
     public void logOut(String login) {
         User user = (User) getSession().getAttribute(login);
-        logging("Server: User logout: " + login);
+        logger.info("Server: User logout: " + login);
         if (user != null) {
             getSession().removeAttribute(login);
             getSession().invalidate();
@@ -99,11 +101,11 @@ public class MainRpcServiceImpl extends RemoteServiceServlet implements MainRpcS
         int rowCount = query.executeUpdate();
         transaction.commit();
 
-        logging("Server: update user password login: " + login);
+        logger.info("Server: update user password login: " + login);
         if (rowCount > 0) {
-            logging("Server: update user password result: success");
+            logger.info("Server: update user password result: success");
         } else {
-            logging("Server: update user password result: failed");
+            logger.info("Server: update user password result: failed");
         }
     }
 
@@ -119,13 +121,9 @@ public class MainRpcServiceImpl extends RemoteServiceServlet implements MainRpcS
             SecretKey key = skf.generateSecret(spec);
             return key.getEncoded();
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-            logging("Server: getHashPassword: failed");
+            logger.error("GetHashPassword failed: NoSuchAlgorithmException", e.getMessage());
             throw new RuntimeException(e);
         }
-    }
-
-    private void logging(String msg) {
-        logger.log(Level.SEVERE, msg);
     }
 
     private HttpSession getSession() {
